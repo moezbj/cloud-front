@@ -18,7 +18,7 @@ const Services = () => {
   return (
     <div>
       <div className="mt-16 mx-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-8">Our products</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-8">Nos services</h1>
         <div className="flex flex-wrap justify-center">
           {cards.map((card) => (
             <div
