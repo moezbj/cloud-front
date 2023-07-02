@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllStockages } from "../../request/admin/stockage";
+import { getAllStockages, deleteStockage } from "../../request/admin/stockage";
 import useApiState from "../../hooks/useApiState";
 import AddUserModal from "../../components/Modals/AddStockage.js";
 const columnHelper = createColumnHelper();
@@ -36,7 +36,7 @@ const columns = [
 const GestionStockages = () => {
   const [stockagesState, getStockagesCall] = useApiState(getAllStockages);
   const [stockages, setStockages] = useState([]);
-  console.log("stockagesState", stockages);
+  const [deleteState, deleteCall] = useApiState(deleteStockage);
   const table = useReactTable({
     data: stockages,
     columns,
@@ -70,6 +70,11 @@ const GestionStockages = () => {
       setStockages(stockagesState.data);
     }
   }, [stockagesState.data, stockagesState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getStockagesCall();
+    }
+  }, [deleteState.data, stockagesState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -98,6 +103,9 @@ const GestionStockages = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -109,6 +117,12 @@ const GestionStockages = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>

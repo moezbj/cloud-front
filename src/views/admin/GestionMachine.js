@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllMachines } from "../../request/admin/machine";
+import { getAllMachines, deleteMachine } from "../../request/admin/machine";
 import useApiState from "../../hooks/useApiState";
 import AddUserModal from "../../components/Modals/AddMachine.js";
 const columnHelper = createColumnHelper();
@@ -36,7 +36,7 @@ const columns = [
 const GestionMachines = () => {
   const [machinesState, getMachinesCall] = useApiState(getAllMachines);
   const [machines, setMachines] = useState([]);
-  console.log("machinesState", machines);
+  const [deleteState, deleteCall] = useApiState(deleteMachine);
   const table = useReactTable({
     data: machines,
     columns,
@@ -70,6 +70,11 @@ const GestionMachines = () => {
       setMachines(machinesState.data);
     }
   }, [machinesState.data, machinesState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getMachinesCall();
+    }
+  }, [deleteState.data, machinesState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -98,6 +103,9 @@ const GestionMachines = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -109,6 +117,12 @@ const GestionMachines = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>
