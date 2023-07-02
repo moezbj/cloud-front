@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllRams } from "../../request/admin/ram";
+import { getAllRams, deleteRam } from "../../request/admin/ram";
 import useApiState from "../../hooks/useApiState";
 import AddUserModal from "../../components/Modals/AddRam.js";
 const columnHelper = createColumnHelper();
@@ -36,7 +36,8 @@ const columns = [
 const GestionRams = () => {
   const [ramsState, getRamsCall] = useApiState(getAllRams);
   const [rams, setRams] = useState([]);
-  console.log("ramsState", rams);
+  const [deleteState, deleteCall] = useApiState(deleteRam);
+
   const table = useReactTable({
     data: rams,
     columns,
@@ -70,6 +71,11 @@ const GestionRams = () => {
       setRams(ramsState.data);
     }
   }, [ramsState.data, ramsState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getRamsCall();
+    }
+  }, [deleteState.data, ramsState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -98,6 +104,9 @@ const GestionRams = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -109,6 +118,12 @@ const GestionRams = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>

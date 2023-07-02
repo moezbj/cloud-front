@@ -6,7 +6,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllApplications } from "../../request/admin/application";
+import {
+  getAllApplications,
+  deleteApplication,
+} from "../../request/admin/application";
 import useApiState from "../../hooks/useApiState";
 import AddUserModal from "../../components/Modals/AddApplication.js";
 const columnHelper = createColumnHelper();
@@ -37,7 +40,7 @@ const GestionApplications = () => {
   const [applicationsState, getApplicationsCall] =
     useApiState(getAllApplications);
   const [applications, setApplications] = useState([]);
-  console.log("applicationsState", applications);
+  const [deleteState, deleteCall] = useApiState(deleteApplication);
   const table = useReactTable({
     data: applications,
     columns,
@@ -71,6 +74,11 @@ const GestionApplications = () => {
       setApplications(applicationsState.data);
     }
   }, [applicationsState.data, applicationsState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getApplicationsCall();
+    }
+  }, [deleteState.data, applicationsState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -99,6 +107,9 @@ const GestionApplications = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -110,6 +121,12 @@ const GestionApplications = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>

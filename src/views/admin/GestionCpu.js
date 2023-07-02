@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllCpus } from "../../request/admin/cpu";
+import { getAllCpus, deleteCpu } from "../../request/admin/cpu";
 import useApiState from "../../hooks/useApiState";
 import AddUserModal from "../../components/Modals/AddCpu.js";
 const columnHelper = createColumnHelper();
@@ -36,7 +36,7 @@ const columns = [
 const GestionCpus = () => {
   const [cpusState, getCpusCall] = useApiState(getAllCpus);
   const [cpus, setCpus] = useState([]);
-  console.log("cpusState", cpus);
+  const [deleteState, deleteCall] = useApiState(deleteCpu);
   const table = useReactTable({
     data: cpus,
     columns,
@@ -70,6 +70,11 @@ const GestionCpus = () => {
       setCpus(cpusState.data);
     }
   }, [cpusState.data, cpusState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getCpusCall();
+    }
+  }, [deleteState.data, cpusState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -98,6 +103,9 @@ const GestionCpus = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -109,6 +117,12 @@ const GestionCpus = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>

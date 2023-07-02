@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import { getAllPlatforms } from "../../request/admin/platform";
+import { getAllPlatforms, deletePlatform } from "../../request/admin/platform";
 import useApiState from "../../hooks/useApiState";
 import AddPlatformModal from "../../components/Modals/AddPlatform.js";
 const columnHelper = createColumnHelper();
@@ -36,7 +36,7 @@ const columns = [
 const GestionPlatforms = () => {
   const [platformsState, getPlatformsCall] = useApiState(getAllPlatforms);
   const [platforms, setPlatforms] = useState([]);
-  console.log("platformsState", platforms);
+  const [deleteState, deleteCall] = useApiState(deletePlatform);
   const table = useReactTable({
     data: platforms,
     columns,
@@ -70,6 +70,11 @@ const GestionPlatforms = () => {
       setPlatforms(platformsState.data);
     }
   }, [platformsState.data, platformsState.errorCode]);
+  useEffect(() => {
+    if (deleteState.data && !deleteState.errorCode) {
+      getPlatformsCall();
+    }
+  }, [deleteState.data, platformsState.errorCode]);
   return (
     <div className="pt-24 px-16">
       <div className="flex justify-end mb-4">
@@ -98,6 +103,9 @@ const GestionPlatforms = () => {
                       )}
                 </th>
               ))}
+              <th className="border-b-[1px] border-t-[1px] border-t-[#000] border-b-[#000] px-4 py-2">
+                <p>Action</p>
+              </th>
             </tr>
           ))}
         </thead>
@@ -109,6 +117,12 @@ const GestionPlatforms = () => {
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
               ))}
+              <td className="py-2 px-4 text-center cursor-pointer">
+                <i
+                  className="fas fa-fas fa-trash"
+                  onClick={() => deleteCall(row.original.id)}
+                ></i>
+              </td>
             </tr>
           ))}
         </tbody>
