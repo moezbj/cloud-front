@@ -32,7 +32,6 @@ const AddStockageModal = ({ onClose, refetch }) => {
       onClose();
     }
   }, [stockageState.data, onClose]);
-  console.log("stockageState", stockageState);
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">

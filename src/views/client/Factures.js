@@ -6,34 +6,50 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import Modal from "react-modal";
-import {
-  getAllAbonements,
-  deleteAbonement,
-} from "../../request/advisor/abonnement";
-import useApiState from "../../hooks/useApiState";
-import AddAbnForm from "../../components/Modals/AddAbonement";
 import { AuthContext } from "providers/AuthProvider";
 
+import { getAllFactures, deleteFacture } from "../../request/client/facture";
+import useApiState from "../../hooks/useApiState";
+import AddFactureForm from "../../components/Modals/AddFacture";
 const columnHelper = createColumnHelper();
 
 const columns = [
-  columnHelper.accessor("libelle", {
+  columnHelper.accessor("client.nom", {
+    header: "Client",
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("dateCreation", {
+    header: "Date de création",
+    cell: (info) => {
+      const a = new Date(info.renderValue()).toLocaleDateString("fr");
+      return a;
+    },
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("etatPaiement", {
+    header: "Status",
+    cell: (info) => info.getValue(),
+    footer: (info) => info.column.id,
+  }),
+  columnHelper.accessor("montant", {
+    header: "Montant",
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,
   }),
 ];
 
-const Abonnement = () => {
-  const [abnState, getabnCall] = useApiState(getAllAbonements);
-  const [deleteState, deleteCall] = useApiState(deleteAbonement);
-  const [recs, setRecs] = useState([]);
+const Factures = () => {
+  const [facturesState, getFacturesCall] = useApiState(getAllFactures);
+  const [deleteState, deleteCall] = useApiState(deleteFacture);
+  const [factures, setFactures] = useState([]);
+  const { user } = useContext(AuthContext)
+
   const table = useReactTable({
-    data: recs,
+    data: factures,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
-  const { user } = useContext(AuthContext);
-
   const [modalIsOpen, setIsOpen] = React.useState(false);
 
   function openModal() {
@@ -55,18 +71,22 @@ const Abonnement = () => {
   };
 
   useEffect(() => {
-    getabnCall();
+    getFacturesCall();
   }, []);
   useEffect(() => {
-    if (abnState.data && !abnState.errorCode) {
-      setRecs(abnState.data);
+    if (facturesState.data && !facturesState.errorCode) {
+      const res =
+        user.role.libelle === "responsable"
+          ? facturesState.data
+          : facturesState.data.filter((f) => f.client._id === user._id);
+      setFactures(res);
     }
-  }, [abnState.data, abnState.errorCode]);
+  }, [facturesState.data, facturesState.errorCode]);
   useEffect(() => {
     if (deleteState.data && !deleteState.errorCode) {
-      getabnCall();
+      getFacturesCall();
     }
-  }, [deleteState.data, abnState.errorCode]);
+  }, [deleteState.data, facturesState.errorCode]);
   return (
     <div className="pt-24 px-16">
       {user.role.libelle === "responsable" && (
@@ -112,22 +132,26 @@ const Abonnement = () => {
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
-                <td className="py-2 px-4 text-center">
-                  {user.role.libelle === "responsable" ? (
+                {user.role.libelle === "responsable" ? (
+                  <td className="py-2 px-4 text-center">
                     <i
                       className="fas fa-fas fa-trash"
                       onClick={() => deleteCall(row.original.id)}
                     ></i>
-                  ) : (
-                    <div
-                      className="flex justify-center items-center cursor-pointer"
-                      onClick={() => window.alert("modif")}
+                  </td>
+                ) : (
+                  <td className="py-2 px-4 text-center">
+                    <i
+                      className="fas fa-fas fa-edit cursor-pointer"
+                      onClick={() =>
+                        window.alert("module paiement  non valide")
+                      }
                     >
-                      <i className="fas fa-fas fa-check "></i>
-                      <p className="">Acheter</p>
-                    </div>
-                  )}
-                </td>
+                      {" "}
+                      payer
+                    </i>
+                  </td>
+                )}
               </tr>
             );
           })}
@@ -141,12 +165,12 @@ const Abonnement = () => {
         style={customStyles}
       >
         <div className="w-[400px] h-[400px]">
-          <h2>Ajouter Abonnement</h2>
-          <AddAbnForm onClose={closeModal} refetch={getabnCall} />
+          <h2>Ajouter Facture</h2>
+          <AddFactureForm onClose={closeModal} refetch={getFacturesCall} />
         </div>
       </Modal>
     </div>
   );
 };
 
-export default Abonnement;
+export default Factures;

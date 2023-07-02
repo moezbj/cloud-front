@@ -1,6 +1,7 @@
 import { axiosPost, axiosGet, axiosPatch, axiosDelete } from "../http";
 
-export const getAllClients = () => axiosGet("/clients", { sendToken: false });
+export const getAllClients = (params) =>
+  axiosGet("/clients", { sendToken: false, params });
 export const getClient = (id) =>
   axiosGet(`/clients/${id}`, { sendToken: false });
 export const addClient = (data) =>

@@ -13,18 +13,6 @@ export default function useStartUp(props) {
         .then((authString) => {
           if (authString) {
             const auth = JSON.parse(authString);
-            /* if (!auth.token) {
-              console.log("here 1");
-              props.setUser(auth);
-              setAuthorizationBearer(auth.token);
-              setDone(true);
-            } else {
-              console.log("auth", auth);
-              console.log("here 2");
-              props.setUser(auth);
-              setAuthorizationBearer(auth.token);
-              setDone(true);
-            } */
             props.setUser(auth);
             setAuthorizationBearer(auth.token);
             setDone(true);

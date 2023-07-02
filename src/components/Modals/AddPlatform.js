@@ -24,7 +24,7 @@ const AddPlatformModal = ({ onClose, refetch }) => {
     });
   };
   useEffect(() => {
-    getClientCall();
+    getClientCall({ role: "client" });
   }, []);
   useEffect(() => {
     if (platformState.data) {
@@ -32,7 +32,6 @@ const AddPlatformModal = ({ onClose, refetch }) => {
       onClose();
     }
   }, [platformState.data, onClose]);
-  console.log("platformState", platformState);
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">

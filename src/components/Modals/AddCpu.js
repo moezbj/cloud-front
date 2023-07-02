@@ -32,7 +32,6 @@ const AddCpuModal = ({ onClose, refetch }) => {
       onClose();
     }
   }, [cpuState.data, onClose]);
-  console.log("cpuState", cpuState);
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">

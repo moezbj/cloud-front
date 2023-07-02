@@ -32,7 +32,6 @@ const UserDropdown = () => {
         });
     }
   };
-  console.log("i18n", i18n.language);
 
   useOutsideAlerter(popoverDropdownRef, closeDropdownPopover);
 

@@ -69,7 +69,7 @@ const Clients = () => {
   };
 
   useEffect(() => {
-    getClientCall();
+    getClientCall({ role: "client" });
   }, []);
   useEffect(() => {
     if (clinetsState.data && !clinetsState.errorCode) {
@@ -78,7 +78,7 @@ const Clients = () => {
   }, [clinetsState.data, clinetsState.errorCode]);
   useEffect(() => {
     if (deleteState.data && !deleteState.errorCode) {
-        getClientCall();
+      getClientCall({ role: "client" });
     }
   }, [deleteState.data, clinetsState.errorCode]);
   return (
@@ -117,7 +117,6 @@ const Clients = () => {
         </thead>
         <tbody className="border-b-[1px] border-[#000]">
           {table.getRowModel().rows.map((row) => {
-            console.log("row", row);
             return (
               <tr key={row.id}>
                 {row.getVisibleCells().map((cell) => (
@@ -145,7 +144,10 @@ const Clients = () => {
       >
         <div className="w-[400px] h-[400px]">
           <h2>Ajouter client</h2>
-          <AddClientForm onClose={closeModal} refetch={getClientCall} />
+          <AddClientForm
+            onClose={closeModal}
+            refetch={() => getClientCall({ role: "client" })}
+          />
         </div>
       </Modal>
     </div>

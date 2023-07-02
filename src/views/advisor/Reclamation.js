@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   createColumnHelper,
   flexRender,
@@ -12,6 +12,8 @@ import {
 } from "../../request/advisor/reclamation";
 import useApiState from "../../hooks/useApiState";
 import AddRecForm from "../../components/Modals/AddReclamtion";
+import { AuthContext } from "providers/AuthProvider";
+
 const columnHelper = createColumnHelper();
 
 const columns = [
@@ -28,6 +30,7 @@ const columns = [
 const Reclamation = () => {
   const [reclamationState, getReclamationCall] = useApiState(getAllReclamation);
   const [deleteState, deleteCall] = useApiState(deleteReclamation);
+  const { user } = useContext(AuthContext);
 
   const [recs, setRecs] = useState([]);
 
@@ -71,15 +74,17 @@ const Reclamation = () => {
   }, [deleteState.data, reclamationState.errorCode]);
   return (
     <div className="pt-24 px-16">
-      <div className="flex justify-end mb-4">
-        <button
-          onClick={openModal}
-          type="button"
-          className="focus:shadow-outline rounded-md w-[150px] h-[50px] bg-[#6610f2] py-1 px-2 text-white focus:outline-none"
-        >
-          Ajouter
-        </button>
-      </div>
+      {user.role.libelle === "client" && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={openModal}
+            type="button"
+            className="focus:shadow-outline rounded-md w-[150px] h-[50px] bg-[#6610f2] py-1 px-2 text-white focus:outline-none"
+          >
+            Ajouter
+          </button>
+        </div>
+      )}
       <table className="border-[1px] border-[#000] w-full">
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -114,10 +119,17 @@ const Reclamation = () => {
                   </td>
                 ))}
                 <td className="py-2 px-4 text-center">
-                  <i
-                    className="fas fa-fas fa-trash"
-                    onClick={() => deleteCall(row.original.id)}
-                  ></i>
+                  {user.role.libelle === "client" ? (
+                    <i
+                      className="fas fa-fas fa-trash"
+                      onClick={() => deleteCall(row.original.id)}
+                    ></i>
+                  ) : (
+                    <i
+                      className="fas fa-fas fa-edit"
+                      onClick={() => window.alert("modif")}
+                    ></i>
+                  )}
                 </td>
               </tr>
             );

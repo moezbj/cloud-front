@@ -32,7 +32,6 @@ const AddUserModal = ({ onClose, refetch }) => {
       onClose();
     }
   }, [userState.data, onClose]);
-  console.log("userState", userState);
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">

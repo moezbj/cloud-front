@@ -28,7 +28,6 @@ export default function Login() {
   };
   useEffect(() => {
     if (loginState.data) {
-      console.log("loginState", loginState.data);
       setAuthorizationBearer(loginState.data.token);
       setUser(loginState.data);
       localforage.setItem("auth", JSON.stringify(loginState.data));
@@ -36,7 +35,6 @@ export default function Login() {
   }, [loginState.data, setUser]);
   useEffect(() => {
     if (loginState.errorCode && !loginState.data) {
-      console.log("loginState", loginState.data);
       setError(loginState.errorCode);
     }
   }, [loginState.data, loginState.errorCode]);

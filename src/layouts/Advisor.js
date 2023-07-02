@@ -7,6 +7,7 @@ import { ROLE } from "../utils/role";
 import Clients from "views/advisor/Clients";
 import Recs from "views/advisor/Reclamation";
 import Abonnement from "views/advisor/Abonnements";
+import Factures from "views/client/Factures";
 
 const Parent = () => {
   return (
@@ -16,6 +17,7 @@ const Parent = () => {
           <Route path="/" exact element={<Clients />} />
           <Route path="/reclamations" exact element={<Recs />} />
           <Route path="/abonnement" exact element={<Abonnement />} />
+          <Route path="/factures" exact element={<Factures />} />
         </Routes>
       </Page>
     </Protected>

@@ -3,7 +3,7 @@ import React, { useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { AuthContext } from "providers/AuthProvider";
 import classNames from "utils/classNames";
-
+import Logo from "assets/img/logoCLoud.png";
 export default function Sidebar() {
   const { user } = useContext(AuthContext);
   const { pathname } = useLocation();
@@ -98,6 +98,11 @@ export default function Sidebar() {
         icon: "fas fa-fas fa-home",
       },
       {
+        name: "Factures",
+        links: "/responsable/factures",
+        icon: "fas fa-fas fa-home",
+      },
+      {
         name: "Abonnements",
         links: "/responsable/abonnement",
         icon: "fas fa-fas fa-home",
@@ -118,13 +123,13 @@ export default function Sidebar() {
         }}
       >
         <div
-          className="w-full p-2 h-14 flex items-center"
+          className="w-full flex items-center"
           onClick={() => {
             setCollapseShow(!collapseShow);
             setSelected("");
           }}
         >
-          logo
+          <img src={Logo} alt="de" />
         </div>
 
         <div className="mt-4 flex flex-col relative">

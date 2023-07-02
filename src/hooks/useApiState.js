@@ -25,8 +25,6 @@ export default function useApiState(fn) {
     };
   };
   const failure = (state, { errorCode, errors }) => {
-    console.log("rer", errorCode, errors);
-
     return {
       ...state,
       errorCode: errorCode || "",

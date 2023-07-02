@@ -21,7 +21,6 @@ function useAuth(login) {
 
   useEffect(() => {
     if (state.data) {
-      console.log("state", state.data);
       setAuthorizationBearer(state.data.token);
       persistUser(state.data);
       setUser(state.data.user);

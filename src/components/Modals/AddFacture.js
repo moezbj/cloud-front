@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { addMachine } from "../../request/admin/machine";
-import { getAllClients } from "../../request/admin/client";
+import { addFacture } from "../../request/client/facture";
 import useApiState from "../../hooks/useApiState";
-import Select from "react-select";
 import { generateRandomId } from "utils/generateId";
+import { AuthContext } from "providers/AuthProvider";
+import { getAllClients } from "../../request/admin/client";
+import Select from "react-select";
 
-const AddMachineModal = ({ onClose, refetch }) => {
+const AddClientModal = ({ onClose, refetch }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [machineState, addMachineCall] = useApiState(addMachine);
+  const [factureState, addfactureCall] = useApiState(addFacture);
   const [clientsState, getClientCall] = useApiState(getAllClients);
   const [client, setClient] = useState({});
-
+  console.log("client", client);
   const onSubmit = (data) => {
-    addMachineCall({
+    addfactureCall({
       ...data,
+      dateCreation: new Date(),
       id: generateRandomId(),
+      etatPaiement: "en cour",
       client: client.value,
     });
   };
@@ -27,47 +30,15 @@ const AddMachineModal = ({ onClose, refetch }) => {
     getClientCall({ role: "client" });
   }, []);
   useEffect(() => {
-    if (machineState.data) {
+    if (factureState.data) {
       refetch();
       onClose();
     }
-  }, [machineState.data, onClose]);
+  }, [factureState.data, onClose]);
+
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
-        <div className="input-wrapper flex flex-col my-[10px]">
-          <label htmlFor="libelle" className="text-[16px] text-[#000] pb-4">
-            libelle
-          </label>
-          <input
-            type="text"
-            className="px-4 py-2 w-full h-[54px] transition duration-300 border border-[#666] rounded-md focus:border-transparent focus:outline-none focus:ring-0"
-            {...register("libelle", {
-              required: "champs requis",
-            })}
-          />
-          {errors.libelle && (
-            <p className="text-xs italic text-red-500">
-              {errors.libelle.message}
-            </p>
-          )}
-        </div>
-
-        <div className="input-wrapper flex flex-col my-[10px]">
-          <label htmlFor="ip" className="text-[16px] text-[#000] pb-4">
-            ip
-          </label>
-          <input
-            type="text"
-            className="px-4 py-2 w-full h-[54px] transition duration-300 border border-[#666] rounded-md focus:border-transparent focus:outline-none focus:ring-0"
-            {...register("ip", {
-              required: "champs requis",
-            })}
-          />
-          {errors.ip && (
-            <p className="text-xs italic text-red-500">{errors.ip.message}</p>
-          )}
-        </div>
         <div className="input-wrapper flex flex-col my-[10px]">
           <label htmlFor="client" className="text-[16px] text-[#000] pb-4">
             Client
@@ -86,20 +57,23 @@ const AddMachineModal = ({ onClose, refetch }) => {
           )}
         </div>
         <div className="input-wrapper flex flex-col my-[10px]">
-          <label htmlFor="os" className="text-[16px] text-[#000] pb-4">
-            os
+          <label htmlFor="email" className="text-[16px] text-[#000] pb-4">
+            Montant
           </label>
           <input
             type="text"
             className="px-4 py-2 w-full h-[54px] transition duration-300 border border-[#666] rounded-md focus:border-transparent focus:outline-none focus:ring-0"
-            {...register("os", {
+            {...register("montant", {
               required: "champs requis",
             })}
           />
-          {errors.os && (
-            <p className="text-xs italic text-red-500">{errors.os.message}</p>
+          {errors.montant && (
+            <p className="text-xs italic text-red-500">
+              {errors.title.message}
+            </p>
           )}
         </div>
+
         <div className="flex justify-center">
           <button
             type="submit"
@@ -113,4 +87,4 @@ const AddMachineModal = ({ onClose, refetch }) => {
   );
 };
 
-export default AddMachineModal;
+export default AddClientModal;

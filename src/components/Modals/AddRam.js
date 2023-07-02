@@ -32,7 +32,6 @@ const AddRamModal = ({ onClose, refetch }) => {
       onClose();
     }
   }, [ramState.data, onClose]);
-  console.log("ramState", ramState);
   return (
     <div className="py-4 w-[650px]">
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
