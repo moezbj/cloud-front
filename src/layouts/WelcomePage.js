@@ -1,4 +1,6 @@
 import React from "react";
+import { Link } from "react-router-dom";
+
 import logo from "../assets/img/home-main.svg";
 import win from "../assets/cats/windows.png";
 import ubuntu from "../assets/cats/ubuntu.png";
@@ -56,12 +58,12 @@ const WelcomePage = () => {
               sagittis turpis non urna eleifend posuere.
             </p>
             <div className="flex justify-center mt-12">
-              <a
-                href="/"
+              <Link
+                to="/login"
                 className="bg-blue-500 hover:bg-blue-600 text-[#6610f2] px-6 py-3 rounded-lg font-medium"
               >
                 Get Started
-              </a>
+              </Link>
             </div>
           </div>
           <div className="w-[47%] flex justify-center items-center">

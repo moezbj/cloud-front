@@ -18,8 +18,9 @@ const Pages = () => {
   return (
     <AuthProvider>
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<WelcomePage />} />
         <Route path="/login" element={<Login />} />
+        {/* <Route path="/welcome" element={<WelcomePage />} /> */}
         <Route path="/auth/register" element={<Register />} />
         <Route path="/auth/forgot-password" element={<ForgotPassword />} />
         <Route

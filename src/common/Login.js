@@ -1,9 +1,9 @@
 import React, { useEffect, useContext, useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import localforage from "localforage";
-import logo from "../assets/img/home-bg.jpg";
 import SideLogo from "../assets/img/home-main.svg";
+import Logo from "assets/img/logoCLoud.png";
 
 import { login } from "../request/auth";
 import useApiState from "../hooks/useApiState";
@@ -38,15 +38,17 @@ export default function Login() {
       setError(loginState.errorCode);
     }
   }, [loginState.data, loginState.errorCode]);
-  if (user) return <Navigate to="/" replace />;
+  if (user) return <Navigate to={`/${user.role.libelle}`} replace />;
   return (
     <div class="lg:flex">
       <div class="lg:w-1/2 xl:max-w-screen-sm">
         <div class="py-12 bg-indigo-100 lg:bg-white flex justify-center lg:justify-start lg:px-12">
           <div class="cursor-pointer flex items-center">
-            <div class="text-2xl text-indigo-800 tracking-wide ml-2 font-semibold">
-              blockify
-            </div>
+            <Link to="/">
+              <div className="w-full flex items-center">
+                <img src={Logo} alt="de" />
+              </div>
+            </Link>
           </div>
         </div>
         <div class="mt-10 px-12 sm:px-24 md:px-48 lg:px-12 lg:mt-16 xl:px-24 xl:max-w-2xl">
